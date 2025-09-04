@@ -402,7 +402,7 @@ static void sdhci_read_block_pio(struct sdhci_host *host)
 {
 	unsigned long flags;
 	size_t blksize, len, chunk;
-	u32 uninitialized_var(scratch);
+	u32 scratch;
 	u8 *buf;
 
 	DBG("PIO reading\n");
@@ -1961,6 +1961,7 @@ static void sdhci_do_set_ios(struct sdhci_host *host, struct mmc_ios *ios)
 			}
 		}
 	}
+
 	spin_lock_irqsave(&host->lock, flags);
 	if (!host->clock) {
 		if (host->mmc && host->mmc->card &&
