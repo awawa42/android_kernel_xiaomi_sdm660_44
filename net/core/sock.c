@@ -1460,10 +1460,9 @@ struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
 			get_net(net);
 		sock_net_set(sk, net);
 		atomic_set(&sk->sk_wmem_alloc, 1);
-
 		cgroup_sk_alloc(&sk->sk_cgrp_data);
-		sock_update_classid(&sk->sk_cgrp_data);
-		sock_update_netprioidx(&sk->sk_cgrp_data);
+		sock_update_classid(sk);
+		sock_update_netprioidx(sk);
 		sk_tx_queue_clear(sk);
 	}
 
@@ -2340,8 +2339,8 @@ void __receive_sock(struct file *file)
 	 */
 	sock = sock_from_file(file, &error);
 	if (sock) {
-		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-		sock_update_classid(&sock->sk->sk_cgrp_data);
+		sock_update_netprioidx(sock->sk);
+		sock_update_classid(sock->sk);
 	}
 }
 

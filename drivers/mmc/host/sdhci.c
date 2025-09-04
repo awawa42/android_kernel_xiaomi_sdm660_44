@@ -1961,7 +1961,6 @@ static void sdhci_do_set_ios(struct sdhci_host *host, struct mmc_ios *ios)
 			}
 		}
 	}
-
 	spin_lock_irqsave(&host->lock, flags);
 	if (!host->clock) {
 		if (host->mmc && host->mmc->card &&

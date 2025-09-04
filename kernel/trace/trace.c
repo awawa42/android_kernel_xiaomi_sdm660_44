@@ -235,6 +235,10 @@ __setup("trace_clock=", set_trace_boot_clock);
 
 static int __init set_tracepoint_printk(char *str)
 {
+	/* Ignore the "tp_printk_stop_on_boot" param */
+	if (*str == '_')
+		return 0;
+
 	if ((strcmp(str, "=0") != 0 && strcmp(str, "=off") != 0))
 		tracepoint_printk = 1;
 	return 1;
@@ -1582,7 +1586,6 @@ static int trace_save_cmdline(struct task_struct *tsk)
 	/* treat recording of idle task as a success */
 	if (!tsk->pid)
 		return 1;
-
 	tpid = tsk->pid & (PID_MAX_DEFAULT - 1);
 
 	preempt_disable();
@@ -1638,7 +1641,6 @@ static void __trace_find_cmdline(int pid, char comm[])
 			return;
 		}
 	}
-
 	map = savedcmd->map_pid_to_cmdline[pid];
 	if (map != NO_CMDLINE_MAP)
 		strlcpy(comm, get_saved_cmdlines(map), TASK_COMM_LEN - 1);

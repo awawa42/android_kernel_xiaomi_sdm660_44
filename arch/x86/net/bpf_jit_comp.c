@@ -1050,7 +1050,7 @@ common_load:
 			 */
 			if (unlikely(proglen + ilen > oldproglen ||
 				     proglen + ilen != addrs[i])) {
-				pr_err("bpf_jit: fatal error\n");
+				pr_err("bpf_jit_compile fatal error\n");
 				return -EFAULT;
 			}
 			memcpy(image + proglen, temp, ilen);

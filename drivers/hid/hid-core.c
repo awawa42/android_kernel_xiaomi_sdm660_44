@@ -557,7 +557,6 @@ static void hid_concatenate_last_usage_page(struct hid_parser *parser)
 	unsigned int current_page;
 	if (!parser->local.usage_index)
 		return;
-
 	usage_page = parser->global.usage_page;
 
 	/*

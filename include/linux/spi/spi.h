@@ -580,6 +580,7 @@ extern void spi_finalize_current_message(struct spi_master *master);
 extern void spi_finalize_current_transfer(struct spi_master *master);
 
 /* the spi driver core manages memory for the spi_master classdev */
+
 extern struct spi_master *__spi_alloc_controller(struct device *host,
 						 unsigned int size, bool slave);
 
