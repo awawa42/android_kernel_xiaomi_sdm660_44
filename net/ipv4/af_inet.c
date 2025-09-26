@@ -397,10 +397,6 @@ lookup_protocol:
 
 	if (sk->sk_prot->init) {
 		err = sk->sk_prot->init(sk);
-		if (err) {
-			sk_common_release(sk);
-			goto out;
-		}
 	}
 
 	if (!kern) {
@@ -409,11 +405,18 @@ lookup_protocol:
 			sk_common_release(sk);
 			goto out;
 		}
+
+		if (err)
+			goto out_sk_release;
 	}
 out:
 	return err;
 out_rcu_unlock:
 	rcu_read_unlock();
+	goto out;
+out_sk_release:
+	sk_common_release(sk);
+	sock->sk = NULL;
 	goto out;
 }
 
