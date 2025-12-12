@@ -2107,7 +2107,7 @@ static unsigned long shrink_list(enum lru_list lru, unsigned long nr_to_scan,
 	return shrink_inactive_list(nr_to_scan, lruvec, sc, lru);
 }
 
-static void prepare_workingset_protection(pg_data_t *pgdat, struct scan_control *sc)
+static void prepare_workingset_protection(struct zone *zone, struct scan_control *sc)
 {
 	/*
 	 * Check the number of anonymous pages to protect them from
@@ -2117,9 +2117,9 @@ static void prepare_workingset_protection(pg_data_t *pgdat, struct scan_control 
 		unsigned long reclaimable_anon;
 
 		reclaimable_anon =
-			node_page_state(pgdat, NR_ACTIVE_ANON) +
-			node_page_state(pgdat, NR_INACTIVE_ANON) +
-			node_page_state(pgdat, NR_ISOLATED_ANON);
+			zone_page_state(zone, NR_ACTIVE_ANON) +
+			zone_page_state(zone, NR_INACTIVE_ANON) +
+			zone_page_state(zone, NR_ISOLATED_ANON);
 		reclaimable_anon <<= (PAGE_SHIFT - 10);
 
 		sc->anon_below_min = reclaimable_anon < sysctl_anon_min_kbytes;
@@ -2134,12 +2134,12 @@ static void prepare_workingset_protection(pg_data_t *pgdat, struct scan_control 
 		unsigned long reclaimable_file, dirty, clean;
 
 		reclaimable_file =
-			node_page_state(pgdat, NR_ACTIVE_FILE) +
-			node_page_state(pgdat, NR_INACTIVE_FILE) +
-			node_page_state(pgdat, NR_ISOLATED_FILE);
-		dirty = node_page_state(pgdat, NR_FILE_DIRTY);
+			zone_page_state(zone, NR_ACTIVE_FILE) +
+			zone_page_state(zone, NR_INACTIVE_FILE) +
+			zone_page_state(zone, NR_ISOLATED_FILE);
+		dirty = zone_page_state(zone, NR_FILE_DIRTY);
 		/*
-		 * node_page_state() sum can go out of sync since
+		 * zone_page_state() sum can go out of sync since
 		 * all the values are not read at once.
 		 */
 		if (likely(reclaimable_file > dirty))
@@ -2207,7 +2207,7 @@ static void get_scan_count(struct lruvec *lruvec, int swappiness,
 	if (!global_reclaim(sc))
 		force_scan = true;
 
-	prepare_workingset_protection(pgdat, sc);
+	prepare_workingset_protection(zone, sc);
 
 	/* If we have no swap space, do not bother scanning anon pages. */
 	if (!sc->may_swap || (get_nr_swap_pages() <= 0)) {
