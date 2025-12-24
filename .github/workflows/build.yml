@@ -13,6 +13,7 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    environment: CI
 
     env:
       TOOLCHAIN_CLANG_URL: https://mirrors.edge.kernel.org/pub/tools/llvm/files/llvm-21.1.8-x86_64.tar.xz
@@ -81,7 +82,6 @@ jobs:
 
       - name: Build
         run: |
-          set -x
           cd "$GITHUB_WORKSPACE/kernel"
           export PATH="$GITHUB_WORKSPACE/toolchain/llvm-21.1.8-x86_64/bin:$GITHUB_WORKSPACE/toolchain/gcc-15.2.0-nolibc/aarch64-linux/bin:$GITHUB_WORKSPACE/toolchain/gcc-15.2.0-nolibc/arm-linux-gnueabi/bin:$PATH"
           DEF_CONFIG=whyred_defconfig
@@ -96,10 +96,34 @@ jobs:
           ccache -s
 
       - name: make ak3 zip
-        run: 7zz a -tzip San-kernel-4.4-whyred-selfuse.zip  "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz-dtb" "$GITHUB_WORKSPACE/CI/anykernel3/*"
+        run: 7z a -tzip San-kernel-4.4-whyred-selfuse.zip  "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz-dtb" "$GITHUB_WORKSPACE/CI/anykernel3/*"
 
       - name: upload to tg
         env:
           CHAT_ID: ${{ secrets.CHAT_ID }}
           API_KEY: ${{ secrets.TG_BOT_TOKEN }}
         run: curl -X POST 'https://api.telegram.org/bot${API_KEY}/sendDocument' -F "chat_id=${CHAT_ID}" -F "document=@./San-kernel-4.4-whyred-selfuse.zip" -F caption="CI" > /dev/null
+
+      - name: Build QTI
+        run: |
+          cd "$GITHUB_WORKSPACE/kernel"
+          export PATH="$GITHUB_WORKSPACE/toolchain/llvm-21.1.8-x86_64/bin:$GITHUB_WORKSPACE/toolchain/gcc-15.2.0-nolibc/aarch64-linux/bin:$GITHUB_WORKSPACE/toolchain/gcc-15.2.0-nolibc/arm-linux-gnueabi/bin:$PATH"
+          sed -e 's/.*CONFIG_QPNP_HAPTIC.*/# CONFIG_QPNP_HAPTIC is not set/g' \
+            -e 's/.*CONFIG_INPUT_QTI_HAPTICS.*/CONFIG_INPUT_QTI_HAPTICS=y/g' \
+            -i ./out/.config
+          make -j$(( $(nproc) +1 )) O=out ARCH=arm64 \
+            CC="ccache clang"
+          
+      - name: Ccache statics
+        run: |
+          ccache -p
+          ccache -s
+
+      - name: make ak3 zip
+        run: 7z a -tzip San-kernel-4.4-whyred-selfuse-QTI.zip  "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz-dtb" "$GITHUB_WORKSPACE/CI/anykernel3/*"
+
+      - name: upload to tg
+        env:
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+          API_KEY: ${{ secrets.TG_BOT_TOKEN }}
+        run: curl -X POST 'https://api.telegram.org/bot${API_KEY}/sendDocument' -F "chat_id=${CHAT_ID}" -F "document=@./San-kernel-4.4-whyred-selfuse-QTI.zip" -F caption="CI" > /dev/null
