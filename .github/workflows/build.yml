@@ -102,7 +102,7 @@ jobs:
         env:
           CHAT_ID: ${{ secrets.CHAT_ID }}
           API_KEY: ${{ secrets.TG_BOT_TOKEN }}
-        run: curl -X POST 'https://api.telegram.org/bot${API_KEY}/sendDocument' -F "chat_id=${CHAT_ID}" -F "document=@./San-kernel-4.4-whyred-selfuse.zip" -F caption="CI" > /dev/null
+        run: curl -X POST "https://api.telegram.org/bot${API_KEY}/sendDocument" -F "chat_id=${CHAT_ID}" -F "document=@./San-kernel-4.4-whyred-selfuse.zip" -F caption="CI" > /dev/null
 
       - name: Build QTI
         run: |
@@ -126,4 +126,4 @@ jobs:
         env:
           CHAT_ID: ${{ secrets.CHAT_ID }}
           API_KEY: ${{ secrets.TG_BOT_TOKEN }}
-        run: curl -X POST 'https://api.telegram.org/bot${API_KEY}/sendDocument' -F "chat_id=${CHAT_ID}" -F "document=@./San-kernel-4.4-whyred-selfuse-QTI.zip" -F caption="CI" > /dev/null
+        run: curl -X POST "https://api.telegram.org/bot${API_KEY}/sendDocument" -F "chat_id=${CHAT_ID}" -F "document=@./San-kernel-4.4-whyred-selfuse-QTI.zip" -F caption="CI" > /dev/null
