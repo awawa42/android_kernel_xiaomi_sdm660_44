@@ -75,6 +75,10 @@ jobs:
           curl "$TOOLCHAIN_CLANG_URL" |tar -C "$GITHUB_WORKSPACE/toolchain" --xz -xv
           curl "$TOOLCHAIN_GCC_ARM64_URL" |tar -C "$GITHUB_WORKSPACE/toolchain" --xz -xv
           curl "$TOOLCHAIN_GCC_ARM_URL" |tar -C "$GITHUB_WORKSPACE/toolchain" --xz -xv
+      - name: Install dependencies
+        run: |
+          sudo apt update -y
+          sudo apt install ccache build-essential -y
 
       - name: Build
         run: |
