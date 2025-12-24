@@ -1,0 +1,82 @@
+name: CI-build
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events
+  push:
+  pull_request:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    env:
+      TOOLCHAIN_CLANG_URL: https://mirrors.edge.kernel.org/pub/tools/llvm/files/llvm-21.1.8-x86_64.tar.xz
+      TOOLCHAIN_GCC_ARM64_URL: https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/15.2.0/x86_64-gcc-15.2.0-nolibc-aarch64-linux.tar.xz
+      TOOLCHAIN_GCC_ARM_URL: https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/15.2.0/x86_64-gcc-15.2.0-nolibc-arm-linux-gnueabi.tar.xz
+      CROSS_COMPILE: aarch64-linux-
+      CROSS_COMPILE-ARM32: arm-linux-gnueabi-
+      KBUILD_BUILD_TIMESTAMP: 'Wed Jul 15 12:00:00 UTC 2018'
+      KBUILD_BUILD_USER: awawa42
+      KBUILD_BUILD_HOST: github_action
+      CCACHE_SLOPPINESS: 'time_macros,include_file_mtime,include_file_ctime'
+      CCACHE_DIR: $GITHUB_WORKSPACE/.ccache
+      CCACHE_MAXSIZE: 2G
+      CCACHE_COMPRESS: 1
+      CCACHE_HASHDIR: 'false'
+      CCACHE_COMPILERCHECK: content
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        if: github.ref_name == 'CI'
+        path: 'CI'
+
+      - uses: actions/checkout@v4
+        if: ${{ ! github.ref_name == 'CI' }}
+        ref: CI
+        path: 'CI'
+
+      - uses: actions/checkout@v4
+        if: github.ref_name == 'CI'
+        ref: 4.4-selfuse-sukisu
+        path: 'kernel'
+        submodules: recursive
+
+      - uses: actions/checkout@v4
+        if: ${{ ! github.ref_name == 'CI' }}
+        path: 'kernel'
+        submodules: recursive
+
+      - uses: actions/cache@v4
+        id: cache
+        name: Setup cache
+        with:
+          key: ${{ env.TOOLCHAIN_CLANG_URL }}
+          path: |
+            $GITHUB_WORKSPACE/toolchain
+            $GITHUB_WORKSPACE/.ccache
+
+      - name: Download toolchains
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir "$GITHUB_WORKSPACE/toolchain"
+          curl "$TOOLCHAIN_CLANG_URL" |tar -C "$GITHUB_WORKSPACE/toolchain" --xz -xv
+          curl "TOOLCHAIN_GCC_ARM64_URL" |tar -C "$GITHUB_WORKSPACE/toolchain" --xz -xv
+          curl "TOOLCHAIN_GCC_ARM_URL" |tar -C "$GITHUB_WORKSPACE/toolchain" --xz -xv
+
+      - name: Build
+        run: |
+          cd "$GITHUB_WORKSPACE/kernel"
+          export "$GITHUB_WORKSPACE/toolchain/llvm-21.1.8-x86_64/bin:$GITHUB_WORKSPACE/toolchain/gcc-15.2.0-nolibc/aarch64-linux/bin:$GITHUB_WORKSPACE/toolchain/gcc-15.2.0-nolibc/arm-linux-gnueabi/bin:$PATH"
+          make -j$(( $(nproc) +1 )) make O=out ARCH=arm64 whyred_defconfig
+          make -j$(( $(nproc) +1 )) O=out ARCH=arm64 \
+            CC="ccache clang"
+          
