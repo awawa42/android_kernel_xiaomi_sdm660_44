@@ -78,9 +78,10 @@ jobs:
 
       - name: Build
         run: |
+          set -x
           cd "$GITHUB_WORKSPACE/kernel"
           export PATH="$GITHUB_WORKSPACE/toolchain/llvm-21.1.8-x86_64/bin:$GITHUB_WORKSPACE/toolchain/gcc-15.2.0-nolibc/aarch64-linux/bin:$GITHUB_WORKSPACE/toolchain/gcc-15.2.0-nolibc/arm-linux-gnueabi/bin:$PATH"
-          make -j$(( $(nproc) +1 )) make O=out ARCH=arm64 whyred_defconfig
+          make -j$(( $(nproc) +1 )) O=out ARCH=arm64 whyred_defconfig
           make -j$(( $(nproc) +1 )) O=out ARCH=arm64 \
             CC="ccache clang"
           
