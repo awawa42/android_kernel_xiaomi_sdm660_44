@@ -34,25 +34,25 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-        if: github.ref_name == 'CI'
+        if: github.ref_name == 'main'
         with:
          path: 'CI'
 
       - uses: actions/checkout@v4
-        if: ${{ ! github.ref_name == 'CI' }}
+        if: ${{ ! github.ref_name == 'main' }}
         with:
-          ref: CI
+          ref: main
           path: 'CI'
 
       - uses: actions/checkout@v4
-        if: github.ref_name == 'CI'
+        if: github.ref_name == 'main'
         with:
-          ref: android-4.4-stable
+          ref: 4.4-selfuse-sukisu
           path: 'kernel'
           submodules: recursive
 
       - uses: actions/checkout@v4
-        if: ${{ ! github.ref_name == 'CI' }}
+        if: ${{ ! github.ref_name == 'main' }}
         with:
           path: 'kernel'
           submodules: recursive
@@ -77,7 +77,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update -y
-          sudo apt install ccache build-essential -y
+          sudo apt install ccache build-essential 7zip -y
 
       - name: Build
         run: |
@@ -95,3 +95,11 @@ jobs:
           ccache -p
           ccache -s
 
+      - name: make ak3 zip
+        run: 7zz a -tzip San-kernel-4.4-whyred-selfuse.zip  "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz-dtb" "$GITHUB_WORKSPACE/CI/anykernel3/*"
+
+      - name: upload to tg
+        env:
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+          API_KEY: ${{ secrets.TG_BOT_TOKEN }}
+        run: curl -X POST 'https://api.telegram.org/bot${API_KEY}/sendDocument' -F "chat_id=${CHAT_ID}" -F "document=@./San-kernel-4.4-whyred-selfuse.zip" -F caption="CI" > /dev/null
