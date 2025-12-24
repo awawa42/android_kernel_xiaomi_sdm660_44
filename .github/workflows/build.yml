@@ -62,7 +62,9 @@ jobs:
         id: cache
         name: Setup cache
         with:
-          key: ${{ env.TOOLCHAIN_CLANG_URL }}
+          key: ${{ env.TOOLCHAIN_CLANG_URL }}-${{ github.run_id }}
+          restore-keys: |
+            ${{ env.TOOLCHAIN_CLANG_URL }}
           path: |
             ${{ github.workspace }}/toolchain
             ${{ github.workspace }}/.ccache
@@ -96,13 +98,20 @@ jobs:
           ccache -s
 
       - name: make ak3 zip
-        run: 7z a -tzip San-kernel-4.4-whyred-selfuse.zip  "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz-dtb" "$GITHUB_WORKSPACE/CI/anykernel3/*"
+        run: |
+          AK3_NAME="san-whyred-4.4-$(date '+%y%m%d_%H%M')-pnp.zip"
+          echo "AK3_NAME=$AK3_NAME" >> "$GITHUB_ENV"
+          7z a -tzip "${AK3_NAME}"  "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz-dtb" "$GITHUB_WORKSPACE/CI/anykernel3/*"
 
       - name: upload to tg
         env:
           CHAT_ID: ${{ secrets.CHAT_ID }}
           API_KEY: ${{ secrets.TG_BOT_TOKEN }}
-        run: curl -X POST "https://api.telegram.org/bot${API_KEY}/sendDocument" -F "chat_id=${CHAT_ID}" -F "document=@./San-kernel-4.4-whyred-selfuse.zip" -F caption="CI" > /dev/null
+        run: curl -X POST "https://api.telegram.org/bot${API_KEY}/sendDocument" \
+              -F parse_mode=MarkdownV2 \
+              -F "chat_id=${CHAT_ID}" \
+              -F "document=@./${AK3_NAME}" \
+              -F caption="from [CI](https://github.com/awawa42/android_kernel_xiaomi_sdm660_44/actions/runs/${GITHUB_RUN_ID}/)" > /dev/null
 
       - name: Build QTI
         run: |
@@ -120,10 +129,17 @@ jobs:
           ccache -s
 
       - name: make ak3 zip
-        run: 7z a -tzip San-kernel-4.4-whyred-selfuse-QTI.zip  "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz-dtb" "$GITHUB_WORKSPACE/CI/anykernel3/*"
+        run: |
+          AK3_NAME="san-whyred-4.4-$(date '+%y%m%d_%H%M')-qti.zip"
+          echo "AK3_NAME=$AK3_NAME" >> "$GITHUB_ENV"
+          7z a -tzip "${AK3_NAME}"  "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz-dtb" "$GITHUB_WORKSPACE/CI/anykernel3/*"
 
       - name: upload to tg
         env:
           CHAT_ID: ${{ secrets.CHAT_ID }}
           API_KEY: ${{ secrets.TG_BOT_TOKEN }}
-        run: curl -X POST "https://api.telegram.org/bot${API_KEY}/sendDocument" -F "chat_id=${CHAT_ID}" -F "document=@./San-kernel-4.4-whyred-selfuse-QTI.zip" -F caption="CI" > /dev/null
+        run: curl -X POST "https://api.telegram.org/bot${API_KEY}/sendDocument" \
+              -F parse_mode=MarkdownV2 \
+              -F "chat_id=${CHAT_ID}" \
+              -F "document=@./${AK3_NAME}" \
+              -F caption="from [CI](https://github.com/awawa42/android_kernel_xiaomi_sdm660_44/actions/runs/${GITHUB_RUN_ID}/)" > /dev/null
