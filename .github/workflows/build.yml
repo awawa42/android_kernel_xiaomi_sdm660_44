@@ -72,10 +72,12 @@ jobs:
       - name: Download toolchains
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
+          if [ ! -d "$GITHUB_WORKSPACE/toolchain" ];then
           mkdir "$GITHUB_WORKSPACE/toolchain"
           curl "$TOOLCHAIN_CLANG_URL" |tar -C "$GITHUB_WORKSPACE/toolchain" --xz -xv
           curl "$TOOLCHAIN_GCC_ARM64_URL" |tar -C "$GITHUB_WORKSPACE/toolchain" --xz -xv
           curl "$TOOLCHAIN_GCC_ARM_URL" |tar -C "$GITHUB_WORKSPACE/toolchain" --xz -xv
+          fi
 
       - name: Install dependencies
         run: |
