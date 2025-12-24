@@ -4,10 +4,16 @@ name: CI-build
 on:
   # Triggers the workflow on push or pull request events
   push:
+    branches:
+      - '**'
   pull_request:
+      branches:
+      - '**'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+      branches:
+      - '**'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -21,12 +27,12 @@ jobs:
       TOOLCHAIN_GCC_ARM64_URL: https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/15.2.0/x86_64-gcc-15.2.0-nolibc-aarch64-linux.tar.xz
       TOOLCHAIN_GCC_ARM_URL: https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/15.2.0/x86_64-gcc-15.2.0-nolibc-arm-linux-gnueabi.tar.xz
       CROSS_COMPILE: aarch64-linux-
-      CROSS_COMPILE-ARM32: arm-linux-gnueabi-
+      CROSS_COMPILE_ARM32: arm-linux-gnueabi-
       KBUILD_BUILD_TIMESTAMP: 'Wed Jul 15 12:00:00 UTC 2018'
       KBUILD_BUILD_USER: awawa42
       KBUILD_BUILD_HOST: github_action
       CCACHE_SLOPPINESS: 'time_macros,include_file_mtime,include_file_ctime'
-      CCACHE_DIR: $GITHUB_WORKSPACE/.ccache
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
       CCACHE_MAXSIZE: 2G
       CCACHE_COMPRESS: 1
       CCACHE_NOHASHDIR: 'true'
@@ -49,7 +55,7 @@ jobs:
       - uses: actions/checkout@v4
         if: github.ref_name == 'CI'
         with:
-          ref: 4.4-selfuse-sukisu
+          ref: android-4.4-stable
           path: 'kernel'
           submodules: recursive
 
@@ -65,8 +71,8 @@ jobs:
         with:
           key: ${{ env.TOOLCHAIN_CLANG_URL }}
           path: |
-            $GITHUB_WORKSPACE/toolchain
-            $GITHUB_WORKSPACE/.ccache
+            ${{ github.workspace }}/toolchain
+            ${{ github.workspace }}/.ccache
 
       - name: Download toolchains
         if: steps.cache.outputs.cache-hit != 'true'
@@ -86,7 +92,14 @@ jobs:
           set -x
           cd "$GITHUB_WORKSPACE/kernel"
           export PATH="$GITHUB_WORKSPACE/toolchain/llvm-21.1.8-x86_64/bin:$GITHUB_WORKSPACE/toolchain/gcc-15.2.0-nolibc/aarch64-linux/bin:$GITHUB_WORKSPACE/toolchain/gcc-15.2.0-nolibc/arm-linux-gnueabi/bin:$PATH"
-          make -j$(( $(nproc) +1 )) O=out ARCH=arm64 whyred_defconfig
+          DEF_CONFIG=whyred_defconfig
+          test -f ./arch/arm64/configs/whyred_selfuse_defconfig && DEF_CONFIG=whyred_selfuse_defconfig
+          make -j$(( $(nproc) +1 )) O=out ARCH=arm64 "$DEF_CONFIG"
           make -j$(( $(nproc) +1 )) O=out ARCH=arm64 \
             CC="ccache clang"
           
+      - name: Ccache statics
+        run: |
+          ccache -p
+          ccache -s
+
