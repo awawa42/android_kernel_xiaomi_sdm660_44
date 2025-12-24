@@ -1,5 +1,5 @@
 [submodule "KernelSU"]
 	path = KernelSU
-	url = https://github.com/SukiSU-Ultra/SukiSU-Ultra.git
-	branch = builtin
+	url = https://github.com/awawa42/SukiSU-Ultra.git
+	branch = builtin-kpm
         ignore = all
