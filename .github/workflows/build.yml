@@ -29,7 +29,7 @@ jobs:
       CCACHE_DIR: $GITHUB_WORKSPACE/.ccache
       CCACHE_MAXSIZE: 2G
       CCACHE_COMPRESS: 1
-      CCACHE_HASHDIR: 'false'
+      CCACHE_NOHASHDIR: 'true'
       CCACHE_COMPILERCHECK: content
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -75,6 +75,7 @@ jobs:
           curl "$TOOLCHAIN_CLANG_URL" |tar -C "$GITHUB_WORKSPACE/toolchain" --xz -xv
           curl "$TOOLCHAIN_GCC_ARM64_URL" |tar -C "$GITHUB_WORKSPACE/toolchain" --xz -xv
           curl "$TOOLCHAIN_GCC_ARM_URL" |tar -C "$GITHUB_WORKSPACE/toolchain" --xz -xv
+
       - name: Install dependencies
         run: |
           sudo apt update -y
