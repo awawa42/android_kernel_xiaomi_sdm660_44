@@ -109,11 +109,13 @@ jobs:
         env:
           CHAT_ID: ${{ secrets.CHAT_ID }}
           API_KEY: ${{ secrets.TG_BOT_TOKEN }}
-        run: curl -X POST "https://api.telegram.org/bot${API_KEY}/sendDocument" \
-              -F parse_mode=MarkdownV2 \
+        run: |
+              set -x
+              curl -X POST "https://api.telegram.org/bot${API_KEY}/sendDocument" \
+              -F "parse_mode=MarkdownV2" \
               -F "chat_id=${CHAT_ID}" \
-              -F "document=@./${AK3_NAME}" \
-              -F caption="from [CI](https://github.com/awawa42/android_kernel_xiaomi_sdm660_44/actions/runs/${GITHUB_RUN_ID}/)" > /dev/null
+              -F "document=@${AK3_NAME}" \
+              -F "caption=from\ [CI](https://github.com/awawa42/android_kernel_xiaomi_sdm660_44/actions/runs/${GITHUB_RUN_ID}/)" > /dev/null ||true
 
       - name: Build QTI
         run: |
@@ -140,8 +142,10 @@ jobs:
         env:
           CHAT_ID: ${{ secrets.CHAT_ID }}
           API_KEY: ${{ secrets.TG_BOT_TOKEN }}
-        run: curl -X POST "https://api.telegram.org/bot${API_KEY}/sendDocument" \
-              -F parse_mode=MarkdownV2 \
+        run: |
+              set -x
+              curl -X POST "https://api.telegram.org/bot${API_KEY}/sendDocument" \
+              -F "parse_mode=MarkdownV2" \
               -F "chat_id=${CHAT_ID}" \
-              -F "document=@./${AK3_NAME}" \
-              -F caption="from [CI](https://github.com/awawa42/android_kernel_xiaomi_sdm660_44/actions/runs/${GITHUB_RUN_ID}/)" > /dev/null
+              -F "document=@${AK3_NAME}" \
+              -F "caption=from\ [CI](https://github.com/awawa42/android_kernel_xiaomi_sdm660_44/actions/runs/${GITHUB_RUN_ID}/)" > /dev/null ||true
