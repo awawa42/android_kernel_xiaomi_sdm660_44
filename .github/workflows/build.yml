@@ -37,23 +37,27 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
         if: github.ref_name == 'CI'
-        path: 'CI'
+        with:
+         path: 'CI'
 
       - uses: actions/checkout@v4
         if: ${{ ! github.ref_name == 'CI' }}
-        ref: CI
-        path: 'CI'
+        with:
+          ref: CI
+          path: 'CI'
 
       - uses: actions/checkout@v4
         if: github.ref_name == 'CI'
-        ref: 4.4-selfuse-sukisu
-        path: 'kernel'
-        submodules: recursive
+        with:
+          ref: 4.4-selfuse-sukisu
+          path: 'kernel'
+          submodules: recursive
 
       - uses: actions/checkout@v4
         if: ${{ ! github.ref_name == 'CI' }}
-        path: 'kernel'
-        submodules: recursive
+        with:
+          path: 'kernel'
+          submodules: recursive
 
       - uses: actions/cache@v4
         id: cache
