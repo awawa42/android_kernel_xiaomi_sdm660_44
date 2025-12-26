@@ -2772,7 +2772,7 @@ int smblib_get_prop_die_health(struct smb_charger *chg,
 #else
 #define CDP_CURRENT_UA			1500000
 #endif
-#define DCP_CURRENT_UA			2000000
+#define DCP_CURRENT_UA			3000000
 #define HVDCP2_CURRENT_UA		1500000
 #if defined (CONFIG_KERNEL_XIAOMI_TULIP) || defined (CONFIG_KERNEL_XIAOMI_WHYRED)
 #define HVDCP_CURRENT_UA		2000000
@@ -4043,7 +4043,7 @@ static void smblib_force_legacy_icl(struct smb_charger *chg, int pst)
 		#elif defined (CONFIG_KERNEL_XIAOMI_TULIP)
 		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 1000000);
 		#elif defined (CONFIG_KERNEL_XIAOMI_WHYRED)
-		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 1000000);
+		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 3000000);
 		#else
 		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 1000000);
 		#endif
@@ -4077,8 +4077,8 @@ static void smblib_force_legacy_icl(struct smb_charger *chg, int pst)
 		smblib_err(chg, "lct battery smblib_force_legacy_icl qc3.0\n");
 		break;
 	default:
-		smblib_err(chg, "Unknown APSD %d; forcing 500mA\n", pst);
-		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 500000);
+		smblib_err(chg, "Unknown APSD %d; forcing 3000mA\n", pst);
+		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 3000000);
 		break;
 	}
 }
