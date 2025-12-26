@@ -1,3 +1,4 @@
+#define DEBUG
 /* Copyright (c) 2016-2017 The Linux Foundation. All rights reserved.
  * Copyright (C) 2019 XiaoMi, Inc.
  *
