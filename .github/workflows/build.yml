@@ -85,7 +85,7 @@ jobs:
           sudo apt install ccache build-essential 7zip -y
       - name: Get localversion-st
         run: |
-          test -f ./localversion-st && LOCAL_VER_ST="$(cat ./localversion-st)-"
+          test -f "$GITHUB_WORKSPACE/kernel/localversion-st" && LOCAL_VER_ST="$(cat $GITHUB_WORKSPACE/kernel/localversion-st)"
           echo "LOCAL_VER_ST=$LOCAL_VER_ST" >> "$GITHUB_ENV"
 
       - name: Build qpnp
