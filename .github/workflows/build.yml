@@ -40,7 +40,7 @@ jobs:
          path: 'CI'
 
       - uses: actions/checkout@v4
-        if: ${{ ! github.ref_name == 'main' }}
+        if: ${{ github.ref_name != 'main' }}
         with:
           ref: main
           path: 'CI'
@@ -53,7 +53,7 @@ jobs:
           submodules: recursive
 
       - uses: actions/checkout@v4
-        if: ${{ ! github.ref_name == 'main' }}
+        if: ${{ github.ref_name != 'main' }}
         with:
           path: 'kernel'
           submodules: recursive
