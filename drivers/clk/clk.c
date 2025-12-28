@@ -763,8 +763,15 @@ static int clk_unvote_vdd_level(struct clk_vdd_class *vdd_class, int level)
 
 	if (WARN(!vdd_class->level_votes[level],
 				"Reference counts are incorrect for %s level %d\n",
-				vdd_class->class_name, level))
-		goto out;
+				vdd_class->class_name, level)){
+					pr_err("vdd_class->cur_level:%lu\n",vdd_class->cur_level);
+					pr_err("vdd_class->num_levels:%d\n",vdd_class->num_levels);
+					for (int i = 0; i < vdd_class->num_levels; i++) {
+						pr_err("level_votes[%d]: %d\n", i, vdd_class->level_votes[i]);
+					}
+					goto out;
+				}
+
 
 	vdd_class->level_votes[level]--;
 
