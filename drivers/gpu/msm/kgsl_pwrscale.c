@@ -345,6 +345,8 @@ int kgsl_devfreq_target(struct device *dev, unsigned long *freq, u32 flags)
 				break;
 			}
 		if (level != pwr->active_pwrlevel)
+			pr_err("kgsl_devfreq_target,kgsl_pwrscale.c,line348\npwr->active_pwrlevel: %d level: %d\n",pwr->active_pwrlevel,level);
+			pr_err("dev: %s,cur_freq: %lu,freq: %lu\n", device->name, cur_freq, freq);
 			kgsl_pwrctrl_pwrlevel_change(device, level);
 	}
 
