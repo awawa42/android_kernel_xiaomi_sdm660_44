@@ -739,10 +739,12 @@ static int clk_vote_vdd_level(struct clk_vdd_class *vdd_class, int level)
 	mutex_lock(&vdd_class->lock);
 
 	vdd_class->level_votes[level]++;
-
+	pr_info("clk_vote_vdd_level:%d\n",level);
 	rc = clk_update_vdd(vdd_class);
-	if (rc)
+	if (rc){
+		pr_err("clk_vote_vdd_level fail!:%d\n",level);
 		vdd_class->level_votes[level]--;
+	}
 
 	mutex_unlock(&vdd_class->lock);
 
@@ -774,10 +776,12 @@ static int clk_unvote_vdd_level(struct clk_vdd_class *vdd_class, int level)
 
 
 	vdd_class->level_votes[level]--;
-
+	pr_info("clk_unvote_vdd_level:%d\n",level);
 	rc = clk_update_vdd(vdd_class);
-	if (rc)
+	if (rc){
+		pr_err("clk_unvote_vdd_level fail!:%d\n",level);
 		vdd_class->level_votes[level]++;
+	}
 
 out:
 	mutex_unlock(&vdd_class->lock);
