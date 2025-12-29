@@ -407,6 +407,7 @@ void kgsl_pwrctrl_pwrlevel_change(struct kgsl_device *device,
 	pwrlevel = &pwr->pwrlevels[pwr->active_pwrlevel];
 	/* Change register settings if any  BEFORE pwrlevel change*/
 	kgsl_pwrctrl_pwrlevel_change_settings(device, 0);
+	pr_err("kgsl_pwrctrl_pwrlevel_change,kgsl_pwrctrl.c,line410\npwrlevel->gpu_freq: %d\n",pwrlevel->gpu_freq);
 	kgsl_pwrctrl_clk_set_rate(pwr->grp_clks[0],
 			pwrlevel->gpu_freq, clocks[0]);
 	_isense_clk_set_rate(pwr, pwr->active_pwrlevel);
@@ -426,6 +427,7 @@ void kgsl_pwrctrl_pwrlevel_change(struct kgsl_device *device,
 	if (pwr->gpu_bimc_int_clk) {
 			if (pwr->active_pwrlevel == 0 &&
 					!pwr->gpu_bimc_interface_enabled) {
+				pr_err("kgsl_pwrctrl_pwrlevel_change,kgsl_pwrctrl.c,line430\npwrlevel->gpu_freq: %d\n",pwr->gpu_bimc_int_clk_freq);
 				kgsl_pwrctrl_clk_set_rate(pwr->gpu_bimc_int_clk,
 						pwr->gpu_bimc_int_clk_freq,
 						"bimc_gpu_clk");
