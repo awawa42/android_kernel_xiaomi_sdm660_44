@@ -37,7 +37,7 @@ set_perm_recursive 0 0 750 750 $ramdisk/init* $ramdisk/sbin;
 ## AnyKernel boot install
 dump_boot;
 
-DTB_FILE="$(ls -1 ${HOME}/*.dtb|tail -n1)"
+DTB_FILE="$(ls -1 ${home}/*.dtb|tail -n1)"
 [ -f "$DTB_FILE" ] && mv -f "$DTB_FILE" "${split_img}/kernel_dtb"
 
 write_boot;
