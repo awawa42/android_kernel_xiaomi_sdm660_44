@@ -120,7 +120,9 @@ jobs:
         run: |
           AK3_NAME="san-whyred-4.4$LOCAL_VER_ST-$GITHUB_REF_NAME-$(date '+%y%m%d_%H%M')-qpnp.zip"
           echo "AK3_NAME=$AK3_NAME" >> "$GITHUB_ENV"
-          7z a -tzip "${AK3_NAME}" "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/dts/qcom/sdm636-mtp_whyred.dtb" "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz" "$GITHUB_WORKSPACE/CI/anykernel3/*"
+          DTB_FILE="$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/dts/qcom/sdm636-mtp_whyred.dtb"
+          test -f "$DTB_FILE" || DTB_FILE="$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/dts/qcom/*.dtb"
+          7z a -tzip "${AK3_NAME}" "$DTB_FILE" "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz" "$GITHUB_WORKSPACE/CI/anykernel3/*"
 
       - name: upload to tg
         env:
@@ -153,7 +155,9 @@ jobs:
         run: |
           AK3_NAME="san-whyred-4.4$LOCAL_VER_ST-$GITHUB_REF_NAME-$(date '+%y%m%d_%H%M')-qti.zip"
           echo "AK3_NAME=$AK3_NAME" >> "$GITHUB_ENV"
-          7z a -tzip "${AK3_NAME}" "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/dts/qcom/sdm636-mtp_whyred-qti.dtb" "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz" "$GITHUB_WORKSPACE/CI/anykernel3/*"
+          DTB_FILE="$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/dts/qcom/sdm636-mtp_whyred-qti.dtb"
+          test -f "$DTB_FILE" || DTB_FILE="$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/dts/qcom/*.dtb"
+          7z a -tzip "${AK3_NAME}" "$DTB_FILE" "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz" "$GITHUB_WORKSPACE/CI/anykernel3/*"
 
       - name: upload to tg
         env:
@@ -186,7 +190,9 @@ jobs:
         run: |
           AK3_NAME="san-whyred-4.4$LOCAL_VER_ST-$GITHUB_REF_NAME-$(date '+%y%m%d_%H%M')-qpnp-newcam.zip"
           echo "AK3_NAME=$AK3_NAME" >> "$GITHUB_ENV"
-          7z a -tzip "${AK3_NAME}" "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/dts/qcom/sdm636-mtp_whyred.dtb" "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz" "$GITHUB_WORKSPACE/CI/anykernel3/*"
+          DTB_FILE="$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/dts/qcom/sdm636-mtp_whyred.dtb"
+          test -f "$DTB_FILE" || DTB_FILE="$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/dts/qcom/*.dtb"
+          7z a -tzip "${AK3_NAME}" "$DTB_FILE" "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz" "$GITHUB_WORKSPACE/CI/anykernel3/*"
 
       - name: upload to tg
         env:
