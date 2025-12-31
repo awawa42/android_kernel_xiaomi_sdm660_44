@@ -6,6 +6,8 @@ on:
   push:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+  # Allows you to reuse this workflow
+  workflow_call:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -101,7 +103,7 @@ jobs:
             -i ./out/.config
           make -j$(( $(nproc) +1 )) O=out ARCH=arm64 \
             CC="ccache clang"
-          
+
       - name: Ccache statics
         run: |
           ccache -p
@@ -135,7 +137,7 @@ jobs:
             -i ./out/.config
           make -j$(( $(nproc) +1 )) O=out ARCH=arm64 \
             CC="ccache clang"
-          
+
       - name: Ccache statics
         run: |
           ccache -s
@@ -168,7 +170,7 @@ jobs:
             -i ./out/.config
           make -j$(( $(nproc) +1 )) O=out ARCH=arm64 \
             CC="ccache clang"
-          
+
       - name: Ccache statics
         run: |
           ccache -s
