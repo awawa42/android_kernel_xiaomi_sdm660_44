@@ -132,7 +132,7 @@ jobs:
               -F "parse_mode=MarkdownV2" \
               -F "chat_id=${CHAT_ID}" \
               -F "document=@${AK3_NAME}" \
-              -F "caption=from [CI ${GITHUB_RUN_ID}](https://github.com/awawa42/android_kernel_xiaomi_sdm660_44/actions/runs/${GITHUB_RUN_ID}/)\n${COMMIT_HASH_SHORT}:${COMMIT_SUBJECT}" > /dev/null ||true
+              -F "caption=from [CI ${GITHUB_RUN_ID}](https://github.com/awawa42/android_kernel_xiaomi_sdm660_44/actions/runs/${GITHUB_RUN_ID}/)\`\`\`${COMMIT_HASH_SHORT}: ${COMMIT_SUBJECT}"\`\`\` > /dev/null ||true
 
       - name: Build qti
         run: |
@@ -165,7 +165,7 @@ jobs:
               -F "parse_mode=MarkdownV2" \
               -F "chat_id=${CHAT_ID}" \
               -F "document=@${AK3_NAME}" \
-              -F "caption=from [CI ${GITHUB_RUN_ID}](https://github.com/awawa42/android_kernel_xiaomi_sdm660_44/actions/runs/${GITHUB_RUN_ID}/)\n${COMMIT_HASH_SHORT}:${COMMIT_SUBJECT}" > /dev/null ||true
+              -F "caption=from [CI ${GITHUB_RUN_ID}](https://github.com/awawa42/android_kernel_xiaomi_sdm660_44/actions/runs/${GITHUB_RUN_ID}/)\`\`\`${COMMIT_HASH_SHORT}: ${COMMIT_SUBJECT}"\`\`\` > /dev/null ||true
 
       - name: Build qpnp newcam
         run: |
@@ -198,4 +198,4 @@ jobs:
               -F "parse_mode=MarkdownV2" \
               -F "chat_id=${CHAT_ID}" \
               -F "document=@${AK3_NAME}" \
-              -F "caption=from [CI ${GITHUB_RUN_ID}](https://github.com/awawa42/android_kernel_xiaomi_sdm660_44/actions/runs/${GITHUB_RUN_ID}/)\n${COMMIT_HASH_SHORT}:${COMMIT_SUBJECT}" > /dev/null ||true
+              -F "caption=from [CI ${GITHUB_RUN_ID}](https://github.com/awawa42/android_kernel_xiaomi_sdm660_44/actions/runs/${GITHUB_RUN_ID}/)\`\`\`${COMMIT_HASH_SHORT}: ${COMMIT_SUBJECT}"\`\`\` > /dev/null ||true
