@@ -222,7 +222,11 @@ dtb-$(CONFIG_MACH_XIAOMI_JASON) := sdm660-mtp-jason.dtb
 dtb-$(CONFIG_MACH_XIAOMI_PLATINA) := sdm660-mtp-platina.dtb
 dtb-$(CONFIG_MACH_XIAOMI_TULIP) := sdm636-mtp-tulip.dtb
 dtb-$(CONFIG_MACH_XIAOMI_WAYNE) := sdm660-mtp-wayne.dtb sdm660-mtp-jasmine.dtb
+ifeq ($(CONFIG_INPUT_QTI_HAPTICS),y)
+dtb-$(CONFIG_MACH_XIAOMI_WHYRED) := sdm636-mtp_whyred-qti.dtb
+else
 dtb-$(CONFIG_MACH_XIAOMI_WHYRED) := sdm636-mtp-whyred.dtb
+endif
 endif
 else
 dtb-$(CONFIG_ARCH_SDM660) += sdm660-sim.dtb \
