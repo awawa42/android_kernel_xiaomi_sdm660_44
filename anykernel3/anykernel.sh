@@ -40,5 +40,8 @@ dump_boot;
 DTB_FILE="$(ls -1 ${home}/*.dtb|tail -n1)"
 [ -f "$DTB_FILE" ] && mv -f "$DTB_FILE" "${split_img}/kernel_dtb"
 
+patch_cmdline "overclock.cpu" "overclock.cpu=1"
+patch_cmdline "overclock.gpu" "overclock.gpu=1"
+
 write_boot;
 ## end boot install
