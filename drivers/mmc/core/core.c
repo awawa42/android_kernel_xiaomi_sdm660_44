@@ -59,6 +59,8 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(mmc_blk_rw_end);
 
 /* If the device is not responding */
 #define MMC_CORE_TIMEOUT_MS	(10 * 60 * 1000) /* 10 minute timeout */
+#define MMC_BKOPS_TIMEOUT_MS		(120 * 1000) /* 120s */
+#define MMC_CACHE_FLUSH_TIMEOUT_MS	(30 * 1000) /* 30s */
 
 /*
  * Background operations can take a long time, depending on the housekeeping
@@ -1366,7 +1368,7 @@ int mmc_set_auto_bkops(struct mmc_card *card, bool enable)
 	}
 
 	ret = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL, EXT_CSD_BKOPS_EN,
-			bkops_en, 0);
+			bkops_en, MMC_BKOPS_TIMEOUT_MS);
 	if (ret) {
 		pr_err("%s: %s: error in setting auto bkops to %d (%d)\n",
 			mmc_hostname(card->host), __func__, enable, ret);
@@ -4511,7 +4513,7 @@ int mmc_flush_cache(struct mmc_card *card)
 			(card->ext_csd.cache_ctrl & 1) &&
 			(!(card->quirks & MMC_QUIRK_CACHE_DISABLE))) {
 		err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
-				EXT_CSD_FLUSH_CACHE, 1, 0);
+				EXT_CSD_FLUSH_CACHE, 1, MMC_CACHE_FLUSH_TIMEOUT_MS);
 		if (err == -ETIMEDOUT) {
 			pr_err("%s: cache flush timeout\n",
 					mmc_hostname(card->host));
