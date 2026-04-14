@@ -80,7 +80,6 @@ jobs:
             ${{ github.workspace }}/.ccache
 
       - name: Download toolchains
-        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           if [ ! -d "$GITHUB_WORKSPACE/toolchain" ];then
           mkdir "$GITHUB_WORKSPACE/toolchain"
