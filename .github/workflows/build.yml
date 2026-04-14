@@ -19,8 +19,11 @@ jobs:
 
     env:
       TOOLCHAIN_CLANG_URL: https://mirrors.edge.kernel.org/pub/tools/llvm/files/llvm-21.1.8-x86_64.tar.xz
-      TOOLCHAIN_GCC_ARM64_URL: https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/4.9.4/x86_64-gcc-4.9.4-nolibc-aarch64-linux.tar.xz
-      TOOLCHAIN_GCC_ARM_URL: https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/4.9.4/x86_64-gcc-4.9.4-nolibc-arm-linux-gnueabi.tar.xz
+      TOOLCHAIN_GCC_ARM64_URL: https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/14.2.0/x86_64-gcc-14.2.0-nolibc-aarch64-linux.tar.xz
+      TOOLCHAIN_GCC_ARM_URL: https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/14.2.0/x86_64-gcc-14.2.0-nolibc-arm-linux-gnueabi.tar.xz
+      TOOLCHAIN_CLANG_PATH: ${{ github.workspace }}/toolchain/llvm-21.1.8-x86_64/bin
+      TOOLCHAIN_GCC_ARM64_PATH: ${{ github.workspace }}/toolchain/gcc-14.2.0-nolibc/aarch64-linux/bin
+      TOOLCHAIN_GCC_ARM_PATH: ${{ github.workspace }}/toolchain/gcc-14.2.0-nolibc/arm-linux-gnueabi/bin
       AR: llvm-ar
       NM: llvm-nm
       OBJCOPY: llvm-objcopy
@@ -81,6 +84,8 @@ jobs:
         run: |
           if [ ! -d "$GITHUB_WORKSPACE/toolchain" ];then
           mkdir "$GITHUB_WORKSPACE/toolchain"
+          fi
+          if [ ! -d "$TOOLCHAIN_CLANG_PATH" ] || [ ! -d "$TOOLCHAIN_GCC_ARM64_PATH" ] || [ ! -d "$TOOLCHAIN_GCC_ARM_PATH" ];then
           curl "$TOOLCHAIN_CLANG_URL" |tar -C "$GITHUB_WORKSPACE/toolchain" --xz -xv
           curl "$TOOLCHAIN_GCC_ARM64_URL" |tar -C "$GITHUB_WORKSPACE/toolchain" --xz -xv
           curl "$TOOLCHAIN_GCC_ARM_URL" |tar -C "$GITHUB_WORKSPACE/toolchain" --xz -xv
@@ -113,7 +118,7 @@ jobs:
       - name: Build qpnp
         run: |
           cd "$GITHUB_WORKSPACE/kernel"
-          export PATH="$GITHUB_WORKSPACE/toolchain/llvm-21.1.8-x86_64/bin:$GITHUB_WORKSPACE/toolchain/gcc-4.9.4-nolibc/aarch64-linux/bin:$GITHUB_WORKSPACE/toolchain/gcc-4.9.4-nolibc/arm-linux-gnueabi/bin:$PATH"
+          export PATH="$TOOLCHAIN_CLANG_PATH:$TOOLCHAIN_GCC_ARM64_PATH:$TOOLCHAIN_GCC_ARM_PATH:$PATH"
           DEF_CONFIG=whyred_defconfig
           test -f ./arch/arm64/configs/whyred_selfuse_defconfig && DEF_CONFIG=whyred_selfuse_defconfig
           make -j$(( $(nproc) +1 )) O=out ARCH=arm64 "$DEF_CONFIG"
@@ -139,7 +144,7 @@ jobs:
       - name: Build qpnp newcam
         run: |
           cd "$GITHUB_WORKSPACE/kernel"
-          export PATH="$GITHUB_WORKSPACE/toolchain/llvm-21.1.8-x86_64/bin:$GITHUB_WORKSPACE/toolchain/gcc-4.9.4-nolibc/aarch64-linux/bin:$GITHUB_WORKSPACE/toolchain/gcc-4.9.4-nolibc/arm-linux-gnueabi/bin:$PATH"
+          export PATH="$TOOLCHAIN_CLANG_PATH:$TOOLCHAIN_GCC_ARM64_PATH:$TOOLCHAIN_GCC_ARM_PATH:$PATH"
           sed -e 's/.*CONFIG_QPNP_HAPTIC.*/CONFIG_QPNP_HAPTIC=y/g' \
             -e 's/.*CONFIG_INPUT_QTI_HAPTICS.*/# CONFIG_INPUT_QTI_HAPTICS is not set/g' \
             -e 's/.*CONFIG_XIAOMI_NEW_CAMERA_BLOBS.*/CONFIG_XIAOMI_NEW_CAMERA_BLOBS=y/g' \
@@ -161,7 +166,7 @@ jobs:
       - name: Build qti
         run: |
           cd "$GITHUB_WORKSPACE/kernel"
-          export PATH="$GITHUB_WORKSPACE/toolchain/llvm-21.1.8-x86_64/bin:$GITHUB_WORKSPACE/toolchain/gcc-4.9.4-nolibc/aarch64-linux/bin:$GITHUB_WORKSPACE/toolchain/gcc-4.9.4-nolibc/arm-linux-gnueabi/bin:$PATH"
+          export PATH="$TOOLCHAIN_CLANG_PATH:$TOOLCHAIN_GCC_ARM64_PATH:$TOOLCHAIN_GCC_ARM_PATH:$PATH"
           sed -e 's/.*CONFIG_QPNP_HAPTIC.*/# CONFIG_QPNP_HAPTIC is not set/g' \
             -e 's/.*CONFIG_INPUT_QTI_HAPTICS.*/CONFIG_INPUT_QTI_HAPTICS=y/g' \
             -e 's/.*CONFIG_XIAOMI_NEW_CAMERA_BLOBS.*/# CONFIG_XIAOMI_NEW_CAMERA_BLOBS is not set/g' \
