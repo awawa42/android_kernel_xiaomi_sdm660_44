@@ -107,6 +107,9 @@ jobs:
           echo "COMMIT_HASH=$(git log -1 --pretty=format:%H)" >> "$GITHUB_ENV"
           echo "COMMIT_HASH_SHORT=$(git log -1 --pretty=format:%h)" >> "$GITHUB_ENV"
           echo "COMMIT_SUBJECT=$(git log -1 --pretty=format:%s)" >> "$GITHUB_ENV"
+          COMMIT_HASH_SHORT=$(git log -1 --pretty=format:%h)
+          sed -e "/^CONFIG_LOCALVERSION/ s/\"\$/-${COMMIT_HASH_SHORT}\"/" \
+          -i arch/arm64/configs/whyred_selfuse_defconfig
 
       - name: Fix Kernelsu Version
         run: |
