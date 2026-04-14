@@ -130,6 +130,7 @@ jobs:
             -i ./out/.config
           make -j$(( $(nproc) +1 )) O=out ARCH=arm64 \
             CC="ccache clang"
+          tar caf "$GITHUB_WORKSPACE/out.tzst" ./out
 
       - name: Ccache statics
         run: |
@@ -208,3 +209,9 @@ jobs:
                   -F "document=@${f}" \
                   -F "caption=$MSG" > /dev/null ||true
               done
+
+      - uses: actions/upload-artifact@v7.0.1
+        with:
+          path: ${{ github.workspace }}/out.tzst
+          archive: false
+       
