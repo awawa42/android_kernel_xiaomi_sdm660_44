@@ -139,7 +139,7 @@ jobs:
 
       - name: make ak3 zip
         run: |
-          AK3_NAME="qpnp-san-whyred-4.4$LOCAL_VER_ST-$GITHUB_REF_NAME-$(date '+%y%m%d')-${COMMIT_HASH_SHORT}.zip"
+          AK3_NAME="qpnp-san-whyred-4.4$LOCAL_VER_ST-$GITHUB_REF_NAME-$(date '+%y%m%d_%H%M')-${COMMIT_HASH_SHORT}.zip"
           DTB_FILE="$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/dts/qcom/sdm636-mtp_whyred.dtb"
           test -f "$DTB_FILE" || DTB_FILE="$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/dts/qcom/*.dtb"
           7z a -tzip "$GITHUB_WORKSPACE/out/$AK3_NAME" "$DTB_FILE" "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz" "$GITHUB_WORKSPACE/CI/anykernel3/*"
@@ -161,7 +161,7 @@ jobs:
 
       - name: make ak3 zip
         run: |
-          AK3_NAME="newcam-qpnp-san-whyred-4.4$LOCAL_VER_ST-$GITHUB_REF_NAME-$(date '+%y%m%d')-${COMMIT_HASH_SHORT}.zip"
+          AK3_NAME="newcam-qpnp-san-whyred-4.4$LOCAL_VER_ST-$GITHUB_REF_NAME-$(date '+%y%m%d_%H%M')-${COMMIT_HASH_SHORT}.zip"
           DTB_FILE="$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/dts/qcom/sdm636-mtp_whyred.dtb"
           test -f "$DTB_FILE" || DTB_FILE="$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/dts/qcom/*.dtb"
           7z a -tzip "$GITHUB_WORKSPACE/out/$AK3_NAME" "$DTB_FILE" "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz" "$GITHUB_WORKSPACE/CI/anykernel3/*"
@@ -183,7 +183,7 @@ jobs:
 
       - name: make ak3 zip
         run: |
-          AK3_NAME="qti-san-whyred-4.4$LOCAL_VER_ST-$GITHUB_REF_NAME-$(date '+%y%m%d')-${COMMIT_HASH_SHORT}.zip"
+          AK3_NAME="qti-san-whyred-4.4$LOCAL_VER_ST-$GITHUB_REF_NAME-$(date '+%y%m%d_%H%M')-${COMMIT_HASH_SHORT}.zip"
           DTB_FILE="$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/dts/qcom/sdm636-mtp_whyred-qti.dtb"
           test -f "$DTB_FILE" || DTB_FILE="$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/dts/qcom/*.dtb"
           7z a -tzip "$GITHUB_WORKSPACE/out/$AK3_NAME" "$DTB_FILE" "$GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image.gz" "$GITHUB_WORKSPACE/CI/anykernel3/*"
