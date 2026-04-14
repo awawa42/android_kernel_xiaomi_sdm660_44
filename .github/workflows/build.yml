@@ -21,6 +21,11 @@ jobs:
       TOOLCHAIN_CLANG_URL: https://mirrors.edge.kernel.org/pub/tools/llvm/files/llvm-21.1.8-x86_64.tar.xz
       TOOLCHAIN_GCC_ARM64_URL: https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/4.9.4/x86_64-gcc-4.9.4-nolibc-aarch64-linux.tar.xz
       TOOLCHAIN_GCC_ARM_URL: https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/4.9.4/x86_64-gcc-4.9.4-nolibc-arm-linux-gnueabi.tar.xz
+      AR: llvm-ar
+      NM: llvm-nm
+      OBJCOPY: llvm-objcopy
+      OBJDUMP: llvm-objdump
+      STRIP: llvm-strip
       CROSS_COMPILE: aarch64-linux-
       CROSS_COMPILE_ARM32: arm-linux-gnueabi-
       KBUILD_BUILD_TIMESTAMP: 'Wed Jul 15 12:00:00 UTC 2018'
