@@ -1036,7 +1036,7 @@ static int vhci_hcd_probe(struct platform_device *pdev)
 	int			ret;
 
 	usbip_dbg_vhci_hc("name %s id %d\n", pdev->name, pdev->id);
-
+	pdev->dev.dma_mask = NULL ;
 	/*
 	 * Allocate and initialize hcd.
 	 * Our private data is also allocated automatically.
